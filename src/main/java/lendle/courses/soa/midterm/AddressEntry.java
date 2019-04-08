@@ -9,19 +9,19 @@ package lendle.courses.soa.midterm;
  *
  * @author lendle
  */
-public class URLEntry {
-    private String url;
+public class AddressEntry {
+    private String address;
 
-    public URLEntry(String url) {
-        this.url = url;
+    public AddressEntry(String url) {
+        this.address = url;
     }
 
-    public String getUrl() {
-        return url;
+    public String getAddress() {
+        return address;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setAddress(String address) {
+        this.address = address;
     }
     
 }
