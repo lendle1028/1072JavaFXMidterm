@@ -44,39 +44,12 @@ public class MainApp extends Application {
         root.setCenter(tabPane);
 
         recentList = new ListView<String>();
-
-        ObservableList<String> list = FXCollections.observableArrayList();
-        recentList.setItems(list);
-        recentList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-                    String url = (String) recentList.getSelectionModel().getSelectedItem();
-                    if (url.endsWith(".png") || url.endsWith(".gif") || url.endsWith(".jpg") || url.endsWith(".jpeg")) {
-                        openImageTab(primaryStage, url);
-                    } else {
-                        openWebTab(url);
-                    }
-                }
-            }
-        });
         root.setLeft(recentList);
-
-        webButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                openWebTab(null);
-            }
-
-        });
-
-        imageButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                openImageTab(primaryStage, null);
-
-            }
-        });
+        //1. process recentList
+        //1.1 (10%) create ObservableList and assign it to the items property of recentList
+        //1.2 (20%)handle double click on recentList; on double-clicking, open the selected url (u have to distinguish between an image url and a web url)
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         Scene scene = new Scene(root, 800, 600);
 
@@ -108,34 +81,16 @@ public class MainApp extends Application {
         WebView webView = new WebView();
         mainPane.setCenter(webView);
         webView.getEngine().setJavaScriptEnabled(true);
-        Tab tab = new Tab("Browser", mainPane);
-        tabPane.getTabs().add(tab);
-        if (url != null) {
-            webView.getEngine().load(url);
-            tab.setText(url);
-        }
-        goButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                webView.getEngine().load(address.getText());
-                tab.setText(address.getText());
-                if (recentList.getItems().contains(address.getText()) == false) {
-                    recentList.getItems().add(address.getText());
-                }
-            }
-        });
+        //2. process webView
+        //2.1 (10%) add it to a tab
+        //2.2 (20%) handle action event on the goButton; goto to the url entered in address field
+        //2.3 (10%) add the url to recentList via recentList.getItems()
     }
 
     private void openImageTab(Stage stage, String url) {
         if (url == null) {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open File");
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("All Images", "*.png", "*.jpg", "*.gif", "*.jpeg"),
-                    new FileChooser.ExtensionFilter("PNG Images", "*.png"),
-                    new FileChooser.ExtensionFilter("JPG Images", "*.jpg", "*.jpeg"),
-                    new FileChooser.ExtensionFilter("GIF Images", "*.gif")
-            );
+            //3. (20%) open a fileChooser to allow the user to select a local image file
+            //////////////////////////////////////////////////////////////////////
             File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
                 url = file.toURI().toString();
@@ -145,8 +100,9 @@ public class MainApp extends Application {
             }
         }
         if (url != null) {
-            Image image = new Image(url);
-            ImageView imageView = new ImageView(image);
+            //4. (10%) load the image into a imageView
+            
+            ///////////////////////////////////////////
             ScrollPane scrollPane = new ScrollPane(imageView);
             tabPane.getTabs().add(new Tab(url, scrollPane));
         }
