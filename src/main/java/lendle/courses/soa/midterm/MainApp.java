@@ -50,7 +50,21 @@ public class MainApp extends Application {
         //1.2 (20%)handle double click on recentList; on double-clicking, open the selected url (u have to distinguish between an image url and a web url)
         
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        webButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                openWebTab(null);
+            }
 
+        });
+
+        imageButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                openImageTab(primaryStage, null);
+
+            }
+        });
         Scene scene = new Scene(root, 800, 600);
 
         primaryStage.setTitle("Hello World!");
