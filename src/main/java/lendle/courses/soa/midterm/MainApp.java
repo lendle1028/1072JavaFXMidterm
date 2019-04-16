@@ -48,14 +48,23 @@ public class MainApp extends Application {
         //1. process recentList
         //1.1 (10%) create ObservableList and assign it to the items property of recentList
         //1.2 (20%)handle double click on recentList; on double-clicking, open the selected url (u have to distinguish between an image url and a web url)
-        ObservableList<String> items=FXCollections.observableArrayList();
+        ObservableList<String> items = FXCollections.observableArrayList();
         recentList.setItems(items);
         recentList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                if (event.getClickCount() == 2) {
+                    String url = recentList.getSelectionModel().getSelectedItem();
+                    if (url.contains("http")) {
+                        openWebTab(url);
+                    } else {
+                        openImageTab(primaryStage, url);
+                    }
+                }
+
             }
         });
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         webButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -106,12 +115,36 @@ public class MainApp extends Application {
         //2.1 (10%) add it to a tab
         //2.2 (20%) handle action event on the goButton; goto to the url entered in address field
         //2.3 (10%) add the url to recentList via recentList.getItems()
+
+        if (url != null) {
+            tabPane.getTabs().add(new Tab(url, mainPane));
+            webView.getEngine().load(url);
+        } else {
+            tabPane.getTabs().add(new Tab(address.getText(), mainPane));
+            goButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    if (address.getText().startsWith("http") == false) {
+                        address.setText("https://www.google.com/search?q=" + address.getText());
+                    }
+                    webView.getEngine().load(address.getText());
+                    recentList.getItems().add(address.getText());
+                }
+            });
+        }
     }
 
     private void openImageTab(Stage stage, String url) {
         if (url == null) {
             //3. (20%) open a fileChooser to allow the user to select a local image file
             //////////////////////////////////////////////////////////////////////
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open File");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("All Image", "*.jpg", "*.png", "*.jpeg"),
+                    new FileChooser.ExtensionFilter("PNG", "*.png"),
+                    new FileChooser.ExtensionFilter("JPG", "*.jpg", "*.jpeg")
+            );
             File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
                 url = file.toURI().toString();
@@ -122,8 +155,10 @@ public class MainApp extends Application {
         }
         if (url != null) {
             //4. (10%) load the image into a imageView
-            
+
             ///////////////////////////////////////////
+            Image image = new Image(url);
+            ImageView imageView = new ImageView(image);
             ScrollPane scrollPane = new ScrollPane(imageView);
             tabPane.getTabs().add(new Tab(url, scrollPane));
         }
