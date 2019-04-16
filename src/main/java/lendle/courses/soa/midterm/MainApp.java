@@ -48,7 +48,14 @@ public class MainApp extends Application {
         //1. process recentList
         //1.1 (10%) create ObservableList and assign it to the items property of recentList
         //1.2 (20%)handle double click on recentList; on double-clicking, open the selected url (u have to distinguish between an image url and a web url)
-        
+        ObservableList<String> items=FXCollections.observableArrayList();
+        recentList.setItems(items);
+        recentList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         webButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
